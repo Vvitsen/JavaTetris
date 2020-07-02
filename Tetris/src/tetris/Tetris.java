@@ -9,6 +9,10 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javafx.scene.canvas.GraphicsContext;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -19,18 +23,50 @@ import javax.swing.JPanel;
 public class Tetris extends JFrame{
 //public class Tetris {
     
-    private Canvas canvas = new Canvas();
+    private Glass glass; 
     
+       
     public Tetris(){
         
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
+        glass = new Glass();        
 
-        setBounds(100, 100, 250, 450);
+        setBounds(glass.getRect());
+        
+        add(BorderLayout.CENTER, glass);
         setResizable(false);
-        canvas.setBackground(Color.WHITE); // define the background color
-        add(BorderLayout.CENTER, canvas);
+       
+        
+   
         setVisible(true);
+    }
+    
+    private void InitComponents(){
+        
+        
+            
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                char c = ke.getKeyChar();
+                if (c == 'b') glass.setBackground(Color.BLUE);
+                if (c == 'w') glass.setBackground(Color.WHITE);
+            }
+            
+        });
+
+ 
+        
+    }
+    
+    private void processing(){
+        
+        Figure figure = new Figure();
+        glass.insertFigure(figure, 0, 0);
+//        glass.moveFigure(figure);
+
     }
         
    
@@ -40,7 +76,10 @@ public class Tetris extends JFrame{
     public static void main(String[] args) {
         // TODO code application logic 
         
-        new Tetris();
+        Tetris tetris = new Tetris();
+        tetris.InitComponents();
+        tetris.processing();
+        
     }
     
 
