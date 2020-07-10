@@ -16,6 +16,9 @@ import static java.lang.Math.random;
 public class Figure {
     
     private final int SIZE = 25;
+    private int[] point = {0, 0};
+    private int x = 0;
+    private int y = 0;
     private final int[][][] shapes ={
         {{0,0,0,0},
          {1,1,1,1}, 
@@ -54,30 +57,30 @@ public class Figure {
     };
     
     private int[][][] altShapes = {
-        {{0, 0},
-         {0, 1},
-         {0, 2},
-         {0, 3}},
+        {{y + 0, x + 0},
+         {y + 0, x + 1},
+         {y + 0, x + 2},
+         {y + 0, x + 3}},
         
-        {{0, 0},
-         {0, 1},
-         {1, 0},
-         {1, 1}},
+        {{y + 0, x + 0},
+         {y + 0, x + 1},
+         {y + 1, x + 0},
+         {y + 1, x + 1}},
         
-        {{0, 0},
-         {0, 1},
-         {0, 2},
-         {1, 0}},
+        {{y + 0, x + 0},
+         {y + 0, x + 1},
+         {y + 0, x + 2},
+         {y + 1, x + 0}},
         
-        {{0, 0},
-         {0, 1},
-         {0, 2},
-         {1, 1}},
+        {{y + 0, x + 0},
+         {y + 0, x + 1},
+         {y + 0, x + 2},
+         {y + 1, x + 1}},
         
-        {{0, 0},
-         {0, 1},
-         {1, 1},
-         {1, 2}}
+        {{y + 0, x + 0},
+         {y + 0, x + 1},
+         {y + 1, x + 1},
+         {y + 1, x + 2}}
     };
     
     private int[][] shape;
@@ -89,25 +92,36 @@ public class Figure {
         index = (int) (random() * 5);
         altShape = altShapes[index];
     }
-    
-    public void rotate(){
-        for (int i = 0; i < 2; i++)
-                for (int j = i; j < 3-i; j++)
-                    { // clockwise
-                        int tmp = shape[3-j][i];
-                        shape[3-j][i] = shape[3-i][3-j];
-                        shape[3-i][3-j] = shape[j][3-i];
-                        shape[j][3-i] = shape[i][j];
-                        shape[i][j] = tmp;
-                    } 
-    }
-    
+        
     public int[][] getShape(){
         return shape;
     }
     
     public int[][] getAltShape(){
         return altShape;
+    }
+    
+    public int[] getPoint(){
+        return point;
+    }
+    
+    public void setPoint(int[] p){
+        point[0] = p[0];
+        point[1] = p[1];
+    }
+    
+    public void setX (int x){
+        this.x = x;
+    }
+    public void setY (int y){
+        this.y = y;
+    }
+
+    int getY() {
+        return y;
+    }
+    int getX() {
+        return x;
     }
     
 }

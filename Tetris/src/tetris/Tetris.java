@@ -23,7 +23,8 @@ import javax.swing.JPanel;
 public class Tetris extends JFrame{
 //public class Tetris {
     
-    private Glass glass; 
+    private Glass glass;
+    private Figure figure;
     
        
     public Tetris(){
@@ -53,19 +54,19 @@ public class Tetris extends JFrame{
                 char c = ke.getKeyChar();
                 if (c == 'b') glass.setBackground(Color.BLUE);
                 if (c == 'w') glass.setBackground(Color.WHITE);
+                if (c == 'i') glass.insertFigure(figure);
+                if (c == 'c') glass.clearFigure(figure);
+                if (c == 'v') glass.stepDownFigure(figure);
             }
             
         });
 
- 
-        
     }
     
     private void processing(){
         
-        Figure figure = new Figure();
-        glass.insertFigure(figure, 0, 0);
-//        glass.moveFigure(figure);
+        figure = new Figure();
+        
 
     }
         

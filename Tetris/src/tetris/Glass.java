@@ -46,7 +46,7 @@ public class Glass extends Canvas{
         return new Rectangle (100, 100, WIDTH*(SIZE)+6 , HEIGHT*(SIZE)+29);
     }
     
-    public void insertFigure(Figure f, int h0, int w0){
+    public boolean insertFigure(Figure f){
 //        int[][] s = f.getShape();
 //        for (int h = h0; h < s.length; h++) {
 //            for (int w = w0; w < s[h].length; w++) {
@@ -60,30 +60,63 @@ public class Glass extends Canvas{
 //        }
         
         int[][] as = f.getAltShape();
-        for (int[] xy : as) {
-            if (field[h0 + xy[0]][w0 + xy[1]] != 0) break;
+//        int[] point = f.getPoint();
+        int h0 = f.getY();
+        int w0 = f.getX();
+        for (int[] xy : as){
+            if ((h0 + xy[0] > HEIGHT-1) || (w0 + xy[1] > WIDTH-1) ) return false;
+        }
+        for (int[] xy : as) {          
+            if (field[h0 + xy[0]][w0 + xy[1]] != 0) return false;
         }
         for (int[] xy : as) {
             field[h0 + xy[0]][w0 + xy[1]] = 1 ;
         }
+        repaint();
+        return true;
     }
     
-    public void clearFigure(Figure f, int h0, int w0){
-        int[][] s = f.getShape();
-        for (int h = h0; h < s.length; h++) {
-            for (int w = w0; w < s[h].length; w++) {
-                if (s[h][w] != 1) field[h][w] = 0;
-            }
+    public void clearFigure(Figure f){
+//        int[][] s = f.getShape();
+//        for (int h = h0; h < s.length; h++) {
+//            for (int w = w0; w < s[h].length; w++) {
+//                if (s[h][w] != 1) field[h][w] = 0;
+//            }
+//        }
+        int[][] as = f.getAltShape();
+        int h0 = f.getY();
+        int w0 = f.getX();
+        for (int[] xy : as) {
+            field[h0 + xy[0]][w0 + xy[1]] = 0 ;
         }
+        repaint();
     }
     
-//    public void moveFigure(Figure f){
+    public void stepDownFigure(Figure f){
 //        int[][] s = f.getShape();
 //        for (int h = 0; h < s.length; h++) {
 //            for (int w = 0; w < s[h].length; w++) {
 //                field[h][w] = s[h][w];
 //            }
 //        }
-//    }
+//        int[] point = f.getPoint();
+//        point[0] += 1;
+//        f.setPoint(point);
+//        repaint();
+        if(figureGoesOut(f, 1)) return;
+        clearFigure(f);
+        f.setY(f.getY()+1);
+        insertFigure(f);
+    }
+    
+    public boolean figureGoesOut(Figure f, int ds){
+        int[][] as = f.getAltShape();
+        int h0 = f.getY();
+        int w0 = f.getX();
+        for (int[] xy : as){
+            if ((h0 + xy[0] + ds > HEIGHT-1) || (w0 + xy[1] > WIDTH-1) ) return true;
+        }
+        return false;
+    }
     
 }
