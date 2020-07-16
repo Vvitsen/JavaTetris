@@ -5,9 +5,9 @@
  */
 package tetris;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Point;
 import static java.lang.Math.random;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -15,48 +15,20 @@ import static java.lang.Math.random;
  */
 public class Figure {
     
-    private final int SIZE = 25;
-    private int[] point = {0, 0};
+    private Point p = new Point(0,0);
+
+    public Point getP() {
+        return p;
+    }
+
+    public void setP(Point p) {
+        this.p = p;
+    }
+    
     private int x = 0;
     private int y = 0;
-    private final int[][][] shapes ={
-        {{0,0,0,0},
-         {1,1,1,1}, 
-         {0,0,0,0}, 
-         {0,0,0,0}}, // I
-        
-        {{0,0,0,0}, 
-         {0,1,1,0}, 
-         {0,1,1,0}, 
-         {0,0,0,0}}, // O
-        
-        {{1,0,0,0}, 
-         {1,1,1,0}, 
-         {0,0,0,0}, 
-         {0,0,0,0}}, // J
-        
-        {{0,0,1,0},
-         {1,1,1,0}, 
-         {0,0,0,0}, 
-         {0,0,0,0}}, // L
-        
-        {{0,1,1,0}, 
-         {1,1,0,0}, 
-         {0,0,0,0}, 
-         {0,0,0,0}}, // S
-        
-        {{1,1,1,0}, 
-         {0,1,0,0}, 
-         {0,0,0,0}, 
-         {0,0,0,0}}, // T
-        
-        {{1,1,0,0},
-         {0,1,1,0},
-         {0,0,0,0}, 
-         {0,0,0,0}}  // Z
-    };
     
-    private int[][][] altShapes = {
+    private int[][][] Shapes = {
         {{y + 0, x + 0},
          {y + 0, x + 1},
          {y + 0, x + 2},
@@ -83,33 +55,29 @@ public class Figure {
          {y + 1, x + 2}}
     };
     
-    private int[][] shape;
-    private int[][] altShape;
+    private int[][] Shape;
+    
+    private Color color = Color.GRAY;
 
     public Figure() {
         int index = (int) (random() * 5);
-        shape = shapes[index];
-        index = (int) (random() * 5);
-        altShape = altShapes[index];
+        Shape = Shapes[index];
     }
-        
-    public int[][] getShape(){
-        return shape;
+    
+    public Figure(int[][] shape){
+        this.Shape = shape;
+    }
+    
+    public Figure(int y, int x, int[][] shape){
+        this.y = y;
+        this.x = x;
+        this.Shape = shape;
     }
     
     public int[][] getAltShape(){
-        return altShape;
+        return Shape;
     }
-    
-    public int[] getPoint(){
-        return point;
-    }
-    
-    public void setPoint(int[] p){
-        point[0] = p[0];
-        point[1] = p[1];
-    }
-    
+        
     public void setX (int x){
         this.x = x;
     }
@@ -122,6 +90,10 @@ public class Figure {
     }
     int getX() {
         return x;
+    }
+    
+    public void setShape(int[][] shape){
+        this.Shape = shape;
     }
     
 }

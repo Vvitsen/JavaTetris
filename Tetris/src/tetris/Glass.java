@@ -8,8 +8,8 @@ package tetris;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
-import javax.swing.JPanel;
 
 /**
  *
@@ -20,21 +20,22 @@ public class Glass extends Canvas{
     private final int SIZE = 25;
     private final int WIDTH = 10;
     private final int HEIGHT = 18;
-    private int[][] field = new int[HEIGHT][WIDTH]; 
+//    private final int[][] field = new int[HEIGHT][WIDTH];
+    private final Color[][] field = new Color[HEIGHT][WIDTH];
     
-//    Glass(){
-//        for (int h = 0; h < s.length; h++) {
-//            for (int w = 0; w < s[h].length; w++) {
-//                field[h][w] = s[h][w];
-//            }
-//        }
-//    }
+    Glass(){
+        for(int h = 0; h < HEIGHT; h++ ){
+            for(int w = 0; w < WIDTH; w++){
+                field[h][w] = Color.WHITE;
+            }
+        }
+    }
     
     @Override
     public void paint(Graphics g){            
         for(int h = 0; h < HEIGHT; h++ ){
             for(int w = 0; w < WIDTH; w++){
-                if (field[h][w] != 0) g.setColor(Color.GRAY);
+                if (field[h][w] != Color.WHITE) g.setColor(Color.GRAY);
                 else g.setColor(Color.WHITE);
                 g.fillRect(w*SIZE, h*SIZE, SIZE-1, SIZE-1);
             }
@@ -46,77 +47,108 @@ public class Glass extends Canvas{
         return new Rectangle (100, 100, WIDTH*(SIZE)+6 , HEIGHT*(SIZE)+29);
     }
     
-    public boolean insertFigure(Figure f){
-//        int[][] s = f.getShape();
-//        for (int h = h0; h < s.length; h++) {
-//            for (int w = w0; w < s[h].length; w++) {
-//                if (s[h][w] != 0 && field[h][w] != 0) break;
-//            }
-//        }
-//        for (int h = h0; h < s.length; h++) {
-//            for (int w = w0; w < s[h].length; w++) {
-//                if (s[h][w] == 1) field[h][w] = s[h][w];
-//            }
-//        }
-        
+    public void insert(Figure f){
         int[][] as = f.getAltShape();
-//        int[] point = f.getPoint();
-        int h0 = f.getY();
-        int w0 = f.getX();
-        for (int[] xy : as){
-            if ((h0 + xy[0] > HEIGHT-1) || (w0 + xy[1] > WIDTH-1) ) return false;
-        }
-        for (int[] xy : as) {          
-            if (field[h0 + xy[0]][w0 + xy[1]] != 0) return false;
-        }
         for (int[] xy : as) {
-            field[h0 + xy[0]][w0 + xy[1]] = 1 ;
+            field[f.getY() + xy[0]][f.getX()+ xy[1]] = Color.GRAY ;
         }
         repaint();
+    }
+    
+    public boolean inBoard(Figure f){
+        int[][] as = f.getAltShape();
+        for (int[] xy : as){
+            if ((f.getY() + xy[0] > HEIGHT-1) || (f.getX() + xy[1] > WIDTH-1) ) return false;
+        }
+        return true;
+    }
+    
+    public boolean fit(Figure f){
+        int[][] as = f.getAltShape();
+        for (int[] xy : as) {          
+            if (field[f.getY() + xy[0]][f.getX() + xy[1]] != Color.WHITE) return false;
+        }
         return true;
     }
     
     public void clearFigure(Figure f){
-//        int[][] s = f.getShape();
-//        for (int h = h0; h < s.length; h++) {
-//            for (int w = w0; w < s[h].length; w++) {
-//                if (s[h][w] != 1) field[h][w] = 0;
-//            }
-//        }
         int[][] as = f.getAltShape();
         int h0 = f.getY();
         int w0 = f.getX();
         for (int[] xy : as) {
-            field[h0 + xy[0]][w0 + xy[1]] = 0 ;
+            field[h0 + xy[0]][w0 + xy[1]] = Color.WHITE ;
         }
         repaint();
     }
     
     public void stepDownFigure(Figure f){
-//        int[][] s = f.getShape();
-//        for (int h = 0; h < s.length; h++) {
-//            for (int w = 0; w < s[h].length; w++) {
-//                field[h][w] = s[h][w];
-//            }
-//        }
-//        int[] point = f.getPoint();
-//        point[0] += 1;
-//        f.setPoint(point);
-//        repaint();
-        if(figureGoesOut(f, 1)) return;
+        if(figureGoesOut(f, Direction.DOWN) ) return;
         clearFigure(f);
         f.setY(f.getY()+1);
-        insertFigure(f);
+        insert(f);
     }
     
-    public boolean figureGoesOut(Figure f, int ds){
+    public void moveFigure(Figure f, Direction ds){ 
+        clearFigure(f);
+        if(!figureGoesOut(f, ds)){
+            f.setY(f.getY()+ ds.dy());
+            f.setX(f.getX() + ds.dx());
+        }
+        insert(f);
+    }
+    
+    public boolean figureGoesOut(Figure f, Direction ds){
         int[][] as = f.getAltShape();
-        int h0 = f.getY();
-        int w0 = f.getX();
         for (int[] xy : as){
-            if ((h0 + xy[0] + ds > HEIGHT-1) || (w0 + xy[1] > WIDTH-1) ) return true;
+            int y = f.getY() + xy[0] + ds.dy();
+            int x = f.getX() + xy[1] + ds.dx();
+            if ( (y  > HEIGHT-1) ||
+                 (y  < 0)        || 
+                 (x > WIDTH-1)   ||
+                 (x < 0)            ) return true;
+            if (field[y][x] != Color.WHITE) return true;
         }
         return false;
     }
     
+    public boolean isPossible(Figure f){
+        int[][] as = f.getAltShape();
+        for (int[] xy : as){
+            int y = f.getY() + xy[0];
+            int x = f.getX() + xy[1];
+            if ( (y  > HEIGHT-1) ||
+                 (y  < 0)        || 
+                 (x > WIDTH-1)   ||
+                 (x < 0)            ) return false;
+            if (field[y][x] != Color.WHITE) return false;
+        }
+        return true;
+    }
+    
+    public void rotateFigure(Figure f){
+        clearFigure(f);
+        if (!figureRotateOut(f)){
+            int[][] as = f.getAltShape();
+            for (int[] xy : as){
+                int tmp = xy[0];
+                xy[0] = xy[1];
+                xy[1] = -tmp;
+            }
+        }
+        insert(f);      
+    }
+    
+    public boolean figureRotateOut(Figure f){
+        int[][] as = f.getAltShape();
+        for (int[] xy : as){
+            int y = f.getY() + xy[1];
+            int x = f.getX() - xy[0];
+            if ( (y  > HEIGHT-1) ||
+                 (y  < 0)        || 
+                 (x > WIDTH-1)   ||
+                 (x < 0)            ) return true;
+            if (field[y][x] != Color.WHITE) return true;
+        }
+        return false;
+    }
 }

@@ -6,15 +6,11 @@
 package tetris;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javafx.scene.canvas.GraphicsContext;
+import java.util.LinkedList;
+import java.util.ListIterator;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *
@@ -25,6 +21,7 @@ public class Tetris extends JFrame{
     
     private Glass glass;
     private Figure figure;
+    private CircularList<Figure> figures = new CircularList<>();
     
        
     public Tetris(){
@@ -52,11 +49,33 @@ public class Tetris extends JFrame{
             @Override
             public void keyPressed(KeyEvent ke) {
                 char c = ke.getKeyChar();
-                if (c == 'b') glass.setBackground(Color.BLUE);
-                if (c == 'w') glass.setBackground(Color.WHITE);
-                if (c == 'i') glass.insertFigure(figure);
+                if (c == 'i') {
+                    Figure f = new Figure();
+                    if(glass.inBoard(f) && glass.fit(f)){
+                        figure = f;
+                        glass.insert(figure);
+                        figures.add(figure);                       
+                    }else{
+                        f = null;
+                    }                    
+                }
                 if (c == 'c') glass.clearFigure(figure);
                 if (c == 'v') glass.stepDownFigure(figure);
+                int i = ke.getKeyCode();
+//                    switch (i){
+//                        case KeyEvent.VK_LEFT: glass.moveFigure(figure, Direction.LEFT);
+//                                                break;
+//                    }
+                    
+                if (i == KeyEvent.VK_LEFT) glass.moveFigure(figure, Direction.LEFT);
+                if (i == KeyEvent.VK_RIGHT) glass.moveFigure(figure, Direction.RIGHT);
+                if (i == KeyEvent.VK_UP) glass.moveFigure(figure, Direction.UP);
+                if (i == KeyEvent.VK_DOWN) glass.moveFigure(figure, Direction.DOWN);
+                if (i == KeyEvent.VK_SPACE) glass.rotateFigure(figure);
+                if (i == KeyEvent.VK_1){
+                    figure = figures.get(figures.indexOf(figure) - 1);
+                }
+                if (i == KeyEvent.VK_2) figure = figures.get(figures.indexOf(figure) + 1);   
             }
             
         });
@@ -65,7 +84,7 @@ public class Tetris extends JFrame{
     
     private void processing(){
         
-        figure = new Figure();
+
         
 
     }
@@ -79,10 +98,12 @@ public class Tetris extends JFrame{
         
         Tetris tetris = new Tetris();
         tetris.InitComponents();
-        tetris.processing();
+//        tetris.processing();
         
     }
     
 
     
 }
+
+
