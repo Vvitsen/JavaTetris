@@ -5,9 +5,10 @@
  */
 package tetris;
 
+import java.awt.Color;
 import java.awt.Point;
 import static java.lang.Math.random;
-import javafx.scene.paint.Color;
+
 
 /**
  *
@@ -94,6 +95,14 @@ public class Figure {
     
     public void setShape(int[][] shape){
         this.Shape = shape;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
     
 }

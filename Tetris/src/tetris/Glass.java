@@ -35,8 +35,7 @@ public class Glass extends Canvas{
     public void paint(Graphics g){            
         for(int h = 0; h < HEIGHT; h++ ){
             for(int w = 0; w < WIDTH; w++){
-                if (field[h][w] != Color.WHITE) g.setColor(Color.GRAY);
-                else g.setColor(Color.WHITE);
+                g.setColor(field[h][w]);
                 g.fillRect(w*SIZE, h*SIZE, SIZE-1, SIZE-1);
             }
         }
@@ -50,7 +49,7 @@ public class Glass extends Canvas{
     public void insert(Figure f){
         int[][] as = f.getAltShape();
         for (int[] xy : as) {
-            field[f.getY() + xy[0]][f.getX()+ xy[1]] = Color.GRAY ;
+            field[f.getY() + xy[0]][f.getX()+ xy[1]] = f.getColor() ;
         }
         repaint();
     }

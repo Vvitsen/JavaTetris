@@ -6,10 +6,9 @@
 package tetris;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
-import java.util.ListIterator;
 import javax.swing.JFrame;
 
 /**
@@ -52,7 +51,9 @@ public class Tetris extends JFrame{
                 if (c == 'i') {
                     Figure f = new Figure();
                     if(glass.inBoard(f) && glass.fit(f)){
+                        if (figure != null) figure.setColor(Color.GRAY);
                         figure = f;
+                        figure.setColor(Color.DARK_GRAY);
                         glass.insert(figure);
                         figures.add(figure);                       
                     }else{
@@ -73,9 +74,15 @@ public class Tetris extends JFrame{
                 if (i == KeyEvent.VK_DOWN) glass.moveFigure(figure, Direction.DOWN);
                 if (i == KeyEvent.VK_SPACE) glass.rotateFigure(figure);
                 if (i == KeyEvent.VK_1){
+                    figure.setColor(Color.GRAY);
                     figure = figures.get(figures.indexOf(figure) - 1);
+                    figure.setColor(Color.DARK_GRAY);
                 }
-                if (i == KeyEvent.VK_2) figure = figures.get(figures.indexOf(figure) + 1);   
+                if (i == KeyEvent.VK_2){
+                    figure.setColor(Color.GRAY);
+                    figure = figures.get(figures.indexOf(figure) + 1);
+                    figure.setColor(Color.DARK_GRAY);
+                }   
             }
             
         });
