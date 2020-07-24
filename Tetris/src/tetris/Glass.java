@@ -20,8 +20,10 @@ public class Glass extends Canvas{
     private final int SIZE = 25;
     private final int WIDTH = 10;
     private final int HEIGHT = 18;
-//    private final int[][] field = new int[HEIGHT][WIDTH];
     private final Color[][] field = new Color[HEIGHT][WIDTH];
+    
+    private Figure currentFigure;
+    private CircularList<Figure> figures = new CircularList<>();
     
     Glass(){
         for(int h = 0; h < HEIGHT; h++ ){
@@ -33,10 +35,17 @@ public class Glass extends Canvas{
     
     @Override
     public void paint(Graphics g){            
-        for(int h = 0; h < HEIGHT; h++ ){
-            for(int w = 0; w < WIDTH; w++){
-                g.setColor(field[h][w]);
-                g.fillRect(w*SIZE, h*SIZE, SIZE-1, SIZE-1);
+//        for(int h = 0; h < HEIGHT; h++ ){
+//            for(int w = 0; w < WIDTH; w++){
+//                g.setColor(field[h][w]);
+//                g.fillRect(w*SIZE, h*SIZE, SIZE-1, SIZE-1);
+//            }
+//        }       
+        for (Figure f : figures){
+            int[][] as = f.getAltShape();
+            for (int[] xy : as) {
+                g.setColor(f.getColor());               
+                g.fillRect((f.getX()+ xy[1])*SIZE, (f.getY() + xy[0])*SIZE, SIZE-1, SIZE-1);
             }
         }
     }
@@ -44,6 +53,26 @@ public class Glass extends Canvas{
     public Rectangle getRect(){
         
         return new Rectangle (100, 100, WIDTH*(SIZE)+6 , HEIGHT*(SIZE)+29);
+    }
+    
+    public void addFigure(){
+        Figure f = new Figure();
+        if(inBoard(f) && fit(f)){
+            if(currentFigure != null ) currentFigure.setColor(Color.GRAY);
+            currentFigure = f;
+            currentFigure.setColor(Color.DARK_GRAY);
+            figures.add(currentFigure);
+        }else{
+            f = null;
+        }
+        repaint();
+    }
+    
+    public void changeFigure(){
+        currentFigure.setColor(Color.GRAY);
+        currentFigure = figures.get(figures.indexOf(currentFigure) - 1);
+        currentFigure.setColor(Color.DARK_GRAY);
+        repaint();
     }
     
     public void insert(Figure f){
@@ -87,6 +116,10 @@ public class Glass extends Canvas{
         insert(f);
     }
     
+    public void moveFigure(Direction ds){
+        moveFigure(currentFigure, ds);
+    }
+    
     public void moveFigure(Figure f, Direction ds){ 
         clearFigure(f);
         if(!figureGoesOut(f, ds)){
@@ -122,6 +155,10 @@ public class Glass extends Canvas{
             if (field[y][x] != Color.WHITE) return false;
         }
         return true;
+    }
+    
+    public void rotateFigure(){
+        rotateFigure(currentFigure);
     }
     
     public void rotateFigure(Figure f){

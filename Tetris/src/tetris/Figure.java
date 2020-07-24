@@ -6,6 +6,7 @@
 package tetris;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import static java.lang.Math.random;
 
@@ -105,4 +106,7 @@ public class Figure {
         this.color = color;
     }
     
+    public void paint(Graphics g){
+        
+    }
 }
