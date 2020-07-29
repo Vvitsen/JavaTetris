@@ -9,7 +9,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  *
@@ -25,7 +29,7 @@ public class Tetris extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         glass = new Glass();        
-
+        
         setBounds(glass.getRect());
         
         add(BorderLayout.CENTER, glass);
@@ -38,7 +42,7 @@ public class Tetris extends JFrame{
     
     private void InitComponents(){
                
-        addKeyListener(new KeyAdapter() {
+        glass.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent ke) {
 
@@ -62,6 +66,13 @@ public class Tetris extends JFrame{
                                                 break;                        
                     }   
             }            
+        });
+        
+        glass.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me){
+                glass.addFigure();
+            }
         });
     }
     
