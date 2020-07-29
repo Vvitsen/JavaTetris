@@ -34,18 +34,19 @@ public class Glass extends Canvas{
     }
     
     @Override
-    public void paint(Graphics g){            
-//        for(int h = 0; h < HEIGHT; h++ ){
-//            for(int w = 0; w < WIDTH; w++){
-//                g.setColor(field[h][w]);
-//                g.fillRect(w*SIZE, h*SIZE, SIZE-1, SIZE-1);
-//            }
-//        }       
+    public void paint(Graphics g){                  
         for (Figure f : figures){
             int[][] as = f.getAltShape();
             for (int[] xy : as) {
-                g.setColor(f.getColor());               
-                g.fillRect((f.getX()+ xy[1])*SIZE, (f.getY() + xy[0])*SIZE, SIZE-1, SIZE-1);
+//                g.setColor(f.getColor());
+//                g.fillRect((f.getX()+ xy[1])*SIZE, (f.getY() + xy[0])*SIZE, SIZE-1, SIZE-1);
+                field[f.getY() + xy[0]][f.getX()+ xy[1]] = f.getColor();
+            }
+        }
+        for(int h = 0; h < HEIGHT; h++ ){
+            for(int w = 0; w < WIDTH; w++){
+                g.setColor(field[h][w]);
+                g.fillRect(w*SIZE, h*SIZE, SIZE-1, SIZE-1);
             }
         }
     }
@@ -69,6 +70,7 @@ public class Glass extends Canvas{
     }
     
     public void changeFigure(){
+        if (currentFigure == null) return;
         currentFigure.setColor(Color.GRAY);
         currentFigure = figures.get(figures.indexOf(currentFigure) - 1);
         currentFigure.setColor(Color.DARK_GRAY);
@@ -117,6 +119,7 @@ public class Glass extends Canvas{
     }
     
     public void moveFigure(Direction ds){
+        if (currentFigure == null) return;
         moveFigure(currentFigure, ds);
     }
     
@@ -158,6 +161,7 @@ public class Glass extends Canvas{
     }
     
     public void rotateFigure(){
+        if (currentFigure == null) return;
         rotateFigure(currentFigure);
     }
     
